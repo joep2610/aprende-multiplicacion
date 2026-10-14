@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Multiplica con Amy</title>
+    <style>
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: #f8f6ef;
+            color: #273647;
+            font: 17px system-ui, sans-serif
+        }
+
+        button,
+        select,
+        input {
+            font: inherit
+        }
+
+        button {
+            cursor: pointer;
+            border: 0;
+            border-radius: 16px;
+            padding: 14px 23px;
+            background: #e9edf0;
+            color: #273647;
+            font-weight: 750
+        }
+
+        button:hover {
+            filter: brightness(.96);
+            transform: translateY(-1px)
+        }
+
+        button:focus-visible,
+        select:focus-visible,
+        input:focus-visible {
+            outline: 3px solid #e29029;
+            outline-offset: 3px
+        }
+
+        header {
+            max-width: 1120px;
+            margin: auto;
+            padding: 28px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 850
+        }
+
+        .logo span {
+            background: #7658c8;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 14px;
+            margin-right: 10px
+        }
+
+        .stars {
+            background: #fff0c3;
+            padding: 10px 17px;
+            border-radius: 25px;
+            font-weight: 800
+        }
+
+        main {
+            max-width: 1120px;
+            margin: auto;
+            padding: 15px 24px 40px
+        }
+
+        .eyebrow {
+            color: #6f55aa;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 2px
+        }
+
+        h1 {
+            font-size: clamp(30px, 5vw, 46px);
+            margin: 10px 0
+        }
+
+        p {
+            line-height: 1.6;
+            color: #627081
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin: 25px 0
+        }
+
+        .active,
+        .primary {
+            background: #7658c8;
+            color: white
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 24px
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e7e6df;
+            border-radius: 25px;
+            padding: 26px;
+            box-shadow: 0 6px 0 #efede6
+        }
+
+        h2 {
+            font-size: 20px;
+            margin: 0 0 18px
+        }
+
+        .tables {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px
+        }
+
+        .tables button {
+            font-size: 25px;
+            padding: 18px
+        }
+
+        .small {
+            font-size: 13px;
+            line-height: 1.5
+        }
+
+        .label {
+            display: block;
+            font-size: 14px;
+            font-weight: 700;
+            margin: 24px 0 10px
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dedee5;
+            border-radius: 12px;
+            background: white
+        }
+
+        .hintbox {
+            background: #f4effe;
+            padding: 16px;
+            border-radius: 16px;
+            margin-top: 22px;
+            color: #614b8e;
+            line-height: 1.5;
+            font-size: 14px
+        }
+
+        .equation {
+            text-align: center;
+            font-size: 43px;
+            font-weight: 850;
+            margin: 8px 0;
+            color: #5b4398
+        }
+
+        .sub {
+            text-align: center;
+            margin: 5px 0 22px
+        }
+
+        .groups {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px
+        }
+
+        .group {
+            border: 1px solid #d6eae2;
+            background: #f0f9f5;
+            border-radius: 15px;
+            padding: 10px;
+            min-height: 87px
+        }
+
+        .group small {
+            display: block;
+            color: #5b8174;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 6px
+        }
+
+        .dots {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px
+        }
+
+        .dot {
+            width: 16px;
+            height: 16px;
+            background: #4ba987;
+            border-radius: 50%;
+            display: inline-block
+        }
+
+        .sum {
+            text-align: center;
+            font-size: 15px;
+            margin: 22px 0;
+            color: #427a65
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px
+        }
+
+        .answers {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            max-width: 440px;
+            margin: 22px auto
+        }
+
+        .answers button {
+            background: #f1edf9;
+            border: 2px solid #e4dcf2;
+            font-size: 27px
+        }
+
+        .answers button.correct {
+            background: #d8f4e4;
+            border-color: #49a67c
+        }
+
+        .answers button.wrong {
+            background: #fff1d8;
+            border-color: #e3b861
+        }
+
+        .feedback {
+            min-height: 52px;
+            text-align: center;
+            font-weight: 700;
+            color: #427a65;
+            line-height: 1.6
+        }
+
+        .progress {
+            height: 9px;
+            background: #eee9f5;
+            border-radius: 10px;
+            margin: 14px 0 25px;
+            overflow: hidden
+        }
+
+        .progress div {
+            height: 100%;
+            background: #9c81dd;
+            transition: width .3s
+        }
+
+        .hidden {
+            display: none !important
+        }
+
+        .muted {
+            background: transparent;
+            border: 1px solid #dcd7e7;
+            font-size: 14px
+        }
+
+        .badge {
+            display: inline-block;
+            background: #e9f5ef;
+            color: #39795e;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700
+        }
+
+        .finish {
+            text-align: center;
+            padding: 30px 0
+        }
+
+        .finish .big {
+            font-size: 70px
+        }
+
+        footer {
+            text-align: center;
+            font-size: 13px;
+            color: #7a8490;
+            margin-top: 30px
+        }
+
+        @media(max-width:760px) {
+            .layout {
+                grid-template-columns: 1fr
+            }
+
+            .tables {
+                grid-template-columns: repeat(4, 1fr)
+            }
+
+            .card {
+                padding: 20px
+            }
+
+            header {
+                padding: 20px
+            }
+
+            .groups {
+                grid-template-columns: repeat(2, 1fr)
+            }
+
+            main {
+                padding: 8px 16px
+            }
+
+            .logo {
+                font-size: 17px
+            }
+
+            .stars {
+                font-size: 14px
+            }
+
+            .equation {
+                font-size: 36px
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo"><span>×</span>Multiplica con Amy</div>
+        <div class="stars" id="stars">⭐ 0 estrellas</div>
+    </header>
+    <main>
+        <div class="eyebrow">UN POQUITO CADA DÍA</div>
+        <h1>¡Multiplicar es descubrir!</h1>
+        <p>Cuenta los grupos, encuentra el patrón y prueba lo que aprendiste.</p>
+        <div class="tabs"><button id="learnTab" class="active">🌱 Aprender</button><button id="playTab">🎯
+                Practicar</button><button id="voice" class="muted" aria-pressed="false">Voz: apagada</button></div>
+        <div class="layout">
+            <aside class="card">
+                <h2>Elige tu tabla</h2>
+                <div class="tables" id="tables"></div>
+                <label class="label" for="factor">¿Por cuánto
+                    multiplicamos?</label>
+                <select id="factor"></select>
+                <div class="hintbox" id="tip"></div>
+                <p class="small">Ing. John Jesus Epiquin Castillo.</p>
+            </aside>
+            <section class="card">
+                <div id="learn"><span class="badge">Mira y cuenta</span>
+                    <div class="equation" id="equation"></div>
+                    <p class="sub" id="explain"></p>
+                    <div class="groups" id="groups"></div>
+                    <div class="sum" id="sum"></div>
+                    <div class="actions"><button class="muted" id="read">🔊 Escuchar</button><button class="primary"
+                            id="nextFactor">Siguiente ejemplo →</button></div>
+                </div>
+                <div id="play" class="hidden">
+                    <div id="round"><span class="badge" id="counter"></span>
+                        <div class="progress">
+                            <div id="bar"></div>
+                        </div>
+                        <div class="equation" id="question"></div>
+                        <p class="sub">Toca la respuesta que creas correcta.</p>
+                        <div class="answers" id="answers"></div>
+                        <div class="feedback" id="feedback" aria-live="polite"></div>
+                        <div class="actions"><button class="muted" id="hint">💡 Dame una pista</button><button
+                                class="primary hidden" id="nextQuestion">Siguiente →</button></div>
+                        <div id="hintArea" class="hidden">
+                            <p class="sub" id="hintText"></p>
+                            <div class="groups" id="hintGroups"></div>
+                        </div>
+                    </div>
+                    <div id="finish" class="finish hidden"></div>
+                </div>
+            </section>
+        </div>
+        <!--<footer>Ing. John Jesus Epiquin Castillo.</footer>-->
+    </main>
+    <script>
+        const $ = id => document.getElementById(id);
+        let table = 6, 
+        factor = 1, 
+        mode = 'learn',
+        voice = false, 
+        stars = 0, 
+        deck = [], 
+        index = 0, 
+        solved = false, 
+        firstTry = true, 
+        correct = 0;
+        try { stars = Number(localStorage.getItem('amy-stars')) || 0 } catch (e) { }
+        const tips = { 
+                        6: 'Multiplica por 5 y suma una vez más el número.', 
+                        7: 'Multiplica por 5 y suma dos veces más el número.', 
+                        8: 'Duplica el número tres veces.', 
+                        9: 'Multiplica por 10 y resta una vez el número.' 
+                    };
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text); u.lang = 'es-PE'; u.rate = .85; speechSynthesis.speak(u)
+            }
+        }
+        function say(t) { if (voice) speak(t) }
+        function updateStars() { $('stars').textContent = '⭐ ' + stars + ' estrellas'; try { localStorage.setItem('amy-stars', String(stars)) } catch (e) { } } function drawGroups(id, a, b) { $(id).innerHTML = Array.from({ length: a }, (_, i) => '<div class="group"><small>GRUPO ' + (i + 1) + '</small><div class="dots">' + ('<span class="dot"></span>'.repeat(b)) + '</div></div>').join(''); $(id).setAttribute('aria-label', a + ' grupos con ' + b + ' puntos cada uno') }
+        function render() 
+        { 
+            document.querySelectorAll('#tables button').forEach(b => { b.classList.toggle('active', +b.dataset.n === table); b.setAttribute('aria-pressed', +b.dataset.n === table) }); $('tip').textContent = '💡 Truco del ' + table + ': ' + tips[table]; $('equation').textContent = table + ' × ' + factor + ' = ' + table * factor; $('explain').textContent = table + ' grupos con ' + factor + ' puntos en cada grupo.'; drawGroups('groups', table, factor); $('sum').textContent = Array(table).fill(factor).join(' + ') + ' = ' + table * factor; }
+        function switchMode(m) { mode = m; $('learn').classList.toggle('hidden', m !== 'learn'); $('play').classList.toggle('hidden', m !== 'play'); $('learnTab').classList.toggle('active', m === 'learn'); $('playTab').classList.toggle('active', m === 'play'); $('factor').disabled = m === 'play'; if (m === 'play') start(); }
+        function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { let j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]] } return a } function start() { deck = shuffle(Array.from({ length: 10 }, (_, i) => i + 1)); index = 0; correct = 0; $('round').classList.remove('hidden'); $('finish').classList.add('hidden'); question() }
+        function question() { solved = false; firstTry = true; factor = deck[index]; $('counter').textContent = 'Tabla del ' + table + ' · Pregunta ' + (index + 1) + ' de 10'; $('bar').style.width = index * 10 + '%'; $('question').textContent = table + ' × ' + factor + ' = ?'; $('feedback').textContent = ''; $('hintArea').classList.add('hidden'); $('nextQuestion').classList.add('hidden'); $('hint').disabled = false; let answer = table * factor, options = new Set([answer]); while (options.size < 4) { let v = answer + (Math.floor(Math.random() * 9) - 4) * table; if (v > 0 && v !== answer) options.add(v) } $('answers').innerHTML = ''; shuffle([...options]).forEach(v => { let b = document.createElement('button'); b.textContent = v; b.onclick = () => check(v, b); $('answers').appendChild(b) }); say('¿Cuánto es ' + table + ' por ' + factor + '?') }
+        function check(v, b) { if (solved) return; if (v === table * factor) { solved = true; stars++; if (firstTry) correct++; updateStars(); b.classList.add('correct'); $('feedback').textContent = '¡Muy bien! ' + table + ' × ' + factor + ' = ' + v + '. ¡Ganaste una estrella!'; $('nextQuestion').classList.remove('hidden'); $('hint').disabled = true; say('¡Muy bien! ' + table + ' por ' + factor + ' es ' + v) } else { firstTry = false; b.classList.add('wrong'); b.disabled = true; $('feedback').textContent = 'Vamos a intentarlo otra vez. Usa la pista y cuenta los grupos.'; say('Inténtalo otra vez. Tú puedes.') } }
+        function hint() { firstTry = false; $('hintArea').classList.remove('hidden'); $('hintText').textContent = 'Cuenta ' + table + ' grupos de ' + factor + '. Suma ' + factor + ' cada vez.'; drawGroups('hintGroups', table, factor) }
+        $('nextQuestion').onclick = () => 
+        { index++; if (index === 10)
+             { $('round').classList.add('hidden'); $('finish').classList.remove('hidden'); $('finish').innerHTML = '<div class="big">🌟</div><h2>¡Terminaste tu aventura!</h2><p>Practicaste 10 multiplicaciones de la tabla del ' + table + '.<br>Resolviste ' + correct + ' sin ayuda al primer intento.</p><p>¡Cada intento te ayuda a aprender!</p><button class="primary" id="again">Volver a practicar</button>'; $('again').onclick = start; say('¡Felicitaciones! Terminaste tu aventura.') } else question() };
+        for (let n = 1; n <= 12; n++) 
+        { let b = document.createElement('button'); 
+        b.textContent = n; 
+        b.dataset.n = n; 
+        b.setAttribute('aria-label', 'Tabla del ' + n);
+         b.onclick = () => { table = n; 
+            render(); if (mode === 'play') start() }; 
+            $('tables').appendChild(b) } 
+        
+        for (let n = 1; n <= 12; n++) 
+        { 
+            $('factor').add(new Option('× ' + n, n)) 
+        }
+        
+        $('factor').value = factor; 
+        $('factor').onchange = () => 
+        { 
+            factor = +$('factor').value; 
+            render() }; $('nextFactor').onclick = () => { 
+                factor = factor % 12 + 1; 
+                $('factor').value = factor; 
+                render(); 
+                say(table + ' por ' + factor + ' es ' + table * factor) };
+                 $('learnTab').onclick = () => 
+                 { 
+                    switchMode('learn'); 
+                    $('factor').value = factor; 
+                    render() }; 
+                    $('playTab').onclick = () => switchMode('play'); 
+                    $('hint').onclick = hint; 
+                    $('read').onclick = () => speak(table + ' grupos de ' + factor + '. ' + table + ' por ' + factor + ' es ' + table * factor); 
+                    $('voice').onclick = () => { voice = !voice; $('voice').textContent = 'Voz: ' + (voice ? 'encendida' : 'apagada'); 
+                    $('voice').setAttribute('aria-pressed', voice); if (!voice && 'speechSynthesis' in window) speechSynthesis.cancel() }; if (!('speechSynthesis' in window)) { $('voice').classList.add('hidden'); $('read').classList.add('hidden') } render(); updateStars();
+    </script>
+</body>
+
+</html>
