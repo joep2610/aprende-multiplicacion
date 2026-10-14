@@ -422,10 +422,18 @@
         correct = 0;
         try { stars = Number(localStorage.getItem('amy-stars')) || 0 } catch (e) { }
         const tips = { 
-                        6: 'Multiplica por 5 y suma una vez más el número.', 
-                        7: 'Multiplica por 5 y suma dos veces más el número.', 
-                        8: 'Duplica el número tres veces.', 
-                        9: 'Multiplica por 10 y resta una vez el número.' 
+                       1: 'Multiplicar por 1 deja el mismo número.',
+                        2: 'Suma el número consigo mismo.',
+                        3: 'Duplica el número y suma una vez más el número.',
+                        4: 'Duplica el número y vuelve a duplicar el resultado.',
+                        5: 'Multiplica por 10 y toma la mitad.',
+                        6: 'Multiplica por 5 y suma una vez más el número.',
+                        7: 'Multiplica por 5 y suma dos veces más el número.',
+                        8: 'Duplica el número tres veces.',
+                        9: 'Multiplica por 10 y resta una vez el número.',
+                        10: 'Para estos números enteros, agrega un cero al final.',
+                        11: 'Multiplica por 10 y suma una vez más el número.',
+                        12: 'Multiplica por 10 y suma el doble del número.'
                     };
         function speak(text) {
             if ('speechSynthesis' in window) {
