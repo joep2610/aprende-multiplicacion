@@ -75,6 +75,19 @@
             font-weight: 800
         }
 
+        .scores {
+            display: flex;
+            flex-wrap: wrap;
+            margin-left: auto;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px
+        }
+
+        .mistakes {
+            background: #ffe5df
+        }
+
         main {
             max-width: 1120px;
             margin: auto;
@@ -330,7 +343,8 @@
             }
 
             header {
-                padding: 20px
+                padding: 20px;
+                flex-wrap: wrap
             }
 
             .groups {
@@ -358,15 +372,23 @@
 
 <body>
     <header>
-        <div class="logo"><span>×</span>Multiplica con Amy</div>
-        <div class="stars" id="stars">⭐ 0 estrellas</div>
+        <div class="logo"><span>×</span>Multiplica con Amy</div>        
     </header>
     <main>
-        <div class="eyebrow">UN POQUITO CADA DÍA</div>
+        <!--<div class="eyebrow">UN POQUITO CADA DÍA</div>-->
         <h1>¡Multiplicar es descubrir!</h1>
         <p>Cuenta los grupos, encuentra el patrón y prueba lo que aprendiste.</p>
-        <div class="tabs"><button id="learnTab" class="active">🌱 Aprender</button><button id="playTab">🎯
-                Practicar</button><button id="voice" class="muted" aria-pressed="false">Voz: apagada</button></div>
+        <div class="tabs">
+            <button id="learnTab" class="active">🌱 Aprender</button>
+            <button id="playTab">🎯 Practicar</button>
+            <button id="voice" class="muted" aria-pressed="false">Voz: apagada</button>
+
+            <div class="scores">
+            <div class="stars" id="stars">⭐ 0 estrellas</div>
+            <div class="stars mistakes" id="mistakes" aria-live="polite">❌ 0 incorrectas</div>
+            </div>
+
+        </div>
         <div class="layout">
             <aside class="card">
                 <h2>Elige tu tabla</h2>
@@ -374,7 +396,7 @@
                 <label class="label" for="factor">¿Por cuánto
                     multiplicamos?</label>
                 <select id="factor"></select>
-                <div class="hintbox" id="tip"></div>
+                <!--<div class="hintbox" id="tip"></div>-->
                 <p class="small">Ing. John Jesus Epiquin Castillo.</p>
             </aside>
             <section class="card">
@@ -403,6 +425,7 @@
                         </div>
                     </div>
                     <div id="finish" class="finish hidden"></div>
+                    <div class="hintbox" id="premio"></div>
                 </div>
             </section>
         </div>
@@ -410,83 +433,234 @@
     </main>
     <script>
         const $ = id => document.getElementById(id);
-        let table = 6, 
-        factor = 1, 
-        mode = 'learn',
-        voice = false, 
-        stars = 0, 
-        deck = [], 
-        index = 0, 
-        solved = false, 
-        firstTry = true, 
-        correct = 0;
+        let table = 1,
+            factor = 1,
+            mode = 'learn',
+            voice = false,
+            stars = 0,
+            deck = [],
+            index = 0,
+            solved = false,
+            firstTry = true,
+            correct = 0,
+            mistakes = 0;
         try { stars = Number(localStorage.getItem('amy-stars')) || 0 } catch (e) { }
-        const tips = { 
-                       1: 'Multiplicar por 1 deja el mismo número.',
-                        2: 'Suma el número consigo mismo.',
-                        3: 'Duplica el número y suma una vez más el número.',
-                        4: 'Duplica el número y vuelve a duplicar el resultado.',
-                        5: 'Multiplica por 10 y toma la mitad.',
-                        6: 'Multiplica por 5 y suma una vez más el número.',
-                        7: 'Multiplica por 5 y suma dos veces más el número.',
-                        8: 'Duplica el número tres veces.',
-                        9: 'Multiplica por 10 y resta una vez el número.',
-                        10: 'Para estos números enteros, agrega un cero al final.',
-                        11: 'Multiplica por 10 y suma una vez más el número.',
-                        12: 'Multiplica por 10 y suma el doble del número.'
-                    };
-        function speak(text) {
-            if ('speechSynthesis' in window) {
+        const tips = {
+            1: 'Multiplicar por 1 deja el mismo número.',
+            2: 'Suma el número consigo mismo.',
+            3: 'Duplica el número y suma una vez más el número.',
+            4: 'Duplica el número y vuelve a duplicar el resultado.',
+            5: 'Multiplica por 10 y toma la mitad.',
+            6: 'Multiplica por 5 y suma una vez más el número.',
+            7: 'Multiplica por 5 y suma dos veces más el número.',
+            8: 'Duplica el número tres veces.',
+            9: 'Multiplica por 10 y resta una vez el número.',
+            10: 'Para estos números enteros, agrega un cero al final.',
+            11: 'Multiplica por 10 y suma una vez más el número.',
+            12: 'Multiplica por 10 y suma el doble del número.'
+        };
+        function speak(text) 
+        {
+            if ('speechSynthesis' in window) 
+            {
                 speechSynthesis.cancel();
-                const u = new SpeechSynthesisUtterance(text); u.lang = 'es-PE'; u.rate = .85; speechSynthesis.speak(u)
+                const u = new SpeechSynthesisUtterance(text); 
+                u.lang = 'es-PE'; 
+                u.rate = .85; 
+                speechSynthesis.speak(u)
             }
         }
-        function say(t) { if (voice) speak(t) }
-        function updateStars() { $('stars').textContent = '⭐ ' + stars + ' estrellas'; try { localStorage.setItem('amy-stars', String(stars)) } catch (e) { } } function drawGroups(id, a, b) { $(id).innerHTML = Array.from({ length: a }, (_, i) => '<div class="group"><small>GRUPO ' + (i + 1) + '</small><div class="dots">' + ('<span class="dot"></span>'.repeat(b)) + '</div></div>').join(''); $(id).setAttribute('aria-label', a + ' grupos con ' + b + ' puntos cada uno') }
-        function render() 
+        function say(t) 
         { 
-            document.querySelectorAll('#tables button').forEach(b => { b.classList.toggle('active', +b.dataset.n === table); b.setAttribute('aria-pressed', +b.dataset.n === table) }); $('tip').textContent = '💡 Truco del ' + table + ': ' + tips[table]; $('equation').textContent = table + ' × ' + factor + ' = ' + table * factor; $('explain').textContent = table + ' grupos con ' + factor + ' puntos en cada grupo.'; drawGroups('groups', table, factor); $('sum').textContent = Array(table).fill(factor).join(' + ') + ' = ' + table * factor; }
-        function switchMode(m) { mode = m; $('learn').classList.toggle('hidden', m !== 'learn'); $('play').classList.toggle('hidden', m !== 'play'); $('learnTab').classList.toggle('active', m === 'learn'); $('playTab').classList.toggle('active', m === 'play'); $('factor').disabled = m === 'play'; if (m === 'play') start(); }
-        function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { let j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]] } return a } function start() { deck = shuffle(Array.from({ length: 10 }, (_, i) => i + 1)); index = 0; correct = 0; $('round').classList.remove('hidden'); $('finish').classList.add('hidden'); question() }
-        function question() { solved = false; firstTry = true; factor = deck[index]; $('counter').textContent = 'Tabla del ' + table + ' · Pregunta ' + (index + 1) + ' de 10'; $('bar').style.width = index * 10 + '%'; $('question').textContent = table + ' × ' + factor + ' = ?'; $('feedback').textContent = ''; $('hintArea').classList.add('hidden'); $('nextQuestion').classList.add('hidden'); $('hint').disabled = false; let answer = table * factor, options = new Set([answer]); while (options.size < 4) { let v = answer + (Math.floor(Math.random() * 9) - 4) * table; if (v > 0 && v !== answer) options.add(v) } $('answers').innerHTML = ''; shuffle([...options]).forEach(v => { let b = document.createElement('button'); b.textContent = v; b.onclick = () => check(v, b); $('answers').appendChild(b) }); say('¿Cuánto es ' + table + ' por ' + factor + '?') }
-        function check(v, b) { if (solved) return; if (v === table * factor) { solved = true; stars++; if (firstTry) correct++; updateStars(); b.classList.add('correct'); $('feedback').textContent = '¡Muy bien! ' + table + ' × ' + factor + ' = ' + v + '. ¡Ganaste una estrella!'; $('nextQuestion').classList.remove('hidden'); $('hint').disabled = true; say('¡Muy bien! ' + table + ' por ' + factor + ' es ' + v) } else { firstTry = false; b.classList.add('wrong'); b.disabled = true; $('feedback').textContent = 'Vamos a intentarlo otra vez. Usa la pista y cuenta los grupos.'; say('Inténtalo otra vez. Tú puedes.') } }
-        function hint() { firstTry = false; $('hintArea').classList.remove('hidden'); $('hintText').textContent = 'Cuenta ' + table + ' grupos de ' + factor + '. Suma ' + factor + ' cada vez.'; drawGroups('hintGroups', table, factor) }
-        $('nextQuestion').onclick = () => 
-        { index++; if (index === 10)
-             { $('round').classList.add('hidden'); $('finish').classList.remove('hidden'); $('finish').innerHTML = '<div class="big">🌟</div><h2>¡Terminaste tu aventura!</h2><p>Practicaste 10 multiplicaciones de la tabla del ' + table + '.<br>Resolviste ' + correct + ' sin ayuda al primer intento.</p><p>¡Cada intento te ayuda a aprender!</p><button class="primary" id="again">Volver a practicar</button>'; $('again').onclick = start; say('¡Felicitaciones! Terminaste tu aventura.') } else question() };
-        for (let n = 1; n <= 12; n++) 
-        { let b = document.createElement('button'); 
-        b.textContent = n; 
-        b.dataset.n = n; 
-        b.setAttribute('aria-label', 'Tabla del ' + n);
-         b.onclick = () => { table = n; 
-            render(); if (mode === 'play') start() }; 
-            $('tables').appendChild(b) } 
-        
-        for (let n = 1; n <= 12; n++) 
-        { 
-            $('factor').add(new Option('× ' + n, n)) 
+            if (voice) speak(t) 
         }
-        
-        $('factor').value = factor; 
-        $('factor').onchange = () => 
+        function updateStars()
         { 
-            factor = +$('factor').value; 
-            render() }; $('nextFactor').onclick = () => { 
-                factor = factor % 12 + 1; 
-                $('factor').value = factor; 
-                render(); 
-                say(table + ' por ' + factor + ' es ' + table * factor) };
-                 $('learnTab').onclick = () => 
-                 { 
-                    switchMode('learn'); 
-                    $('factor').value = factor; 
-                    render() }; 
-                    $('playTab').onclick = () => switchMode('play'); 
-                    $('hint').onclick = hint; 
-                    $('read').onclick = () => speak(table + ' grupos de ' + factor + '. ' + table + ' por ' + factor + ' es ' + table * factor); 
-                    $('voice').onclick = () => { voice = !voice; $('voice').textContent = 'Voz: ' + (voice ? 'encendida' : 'apagada'); 
-                    $('voice').setAttribute('aria-pressed', voice); if (!voice && 'speechSynthesis' in window) speechSynthesis.cancel() }; if (!('speechSynthesis' in window)) { $('voice').classList.add('hidden'); $('read').classList.add('hidden') } render(); updateStars();
+            $('stars').textContent = '⭐ ' + stars + ' estrellas'; 
+            try 
+            { 
+                localStorage.setItem('amy-stars', String(stars)) 
+            } 
+            catch (e) { } 
+        }             
+        function drawGroups(id, a, b) 
+        {
+            $(id).innerHTML = Array.from({ length: a }, (_, i) => '<div class="group"><small>GRUPO ' + (i + 1) + '</small><div class="dots">' + ('<span class="dot"></span>'.repeat(b)) + '</div></div>').join(''); 
+            $(id).setAttribute('aria-label', a + ' grupos con ' + b + ' puntos cada uno') 
+        }
+        function render() 
+        {
+            $('factor').value = factor; 
+            document.querySelectorAll('#tables button').forEach(b => {
+                b.classList.toggle('active', +b.dataset.n === table);
+                b.setAttribute('aria-pressed', +b.dataset.n === table)
+            });
+            //$('tip').textContent = '💡 Truco del ' + table + ': ' + tips[table];            
+            $('equation').textContent = table + ' × ' + factor + ' = ' + table * factor;
+            $('explain').textContent = table + ' grupos con ' + factor + ' puntos en cada grupo.';
+            drawGroups('groups', table, factor); $('sum').textContent = Array(table).fill(factor).join(' + ') + ' = ' + table * factor;
+        }
+        function switchMode(m)
+        {
+            mode = m;
+            $('learn').classList.toggle('hidden', m !== 'learn');
+            $('play').classList.toggle('hidden', m !== 'play');
+            $('learnTab').classList.toggle('active', m === 'learn');
+            $('playTab').classList.toggle('active', m === 'play');
+            $('factor').disabled = m === 'play'; if (m === 'play')
+                start();
+        }
+        function shuffle(a) {
+            for (let i = a.length - 1; i > 0; i--) { let j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]] } return a
+        }
+        function start() {
+            deck = shuffle(Array.from({ length: 12 }, (_, i) => i + 1));
+            index = 0;
+            mistakes = 0;
+            correct = 0;             
+            $('mistakes').textContent = '❌ 0 incorrectas';                                       
+            $('round').classList.remove('hidden');
+            $('finish').classList.add('hidden');
+            question()
+        }
+        function question() {
+            solved = false;
+            firstTry = true;
+            factor = deck[index];
+            $('counter').textContent = 'Tabla del ' + table + ' · Pregunta ' + (index + 1) + ' de 12';
+            $('bar').style.width = (index / 12 * 100) + '%';
+            
+            $('question').textContent = table + ' × ' + factor + ' = ?'; $('feedback').textContent = '';
+            $('hintArea').classList.add('hidden'); $('nextQuestion').classList.add('hidden'); $('hint').disabled = false;
+            let answer = table * factor, options = new Set([answer]);
+            while (options.size < 4) 
+            {
+                let v = answer + (Math.floor(Math.random() * 9) - 4) * table;
+                if (v > 0 && v !== answer) options.add(v)
+            }
+            $('answers').innerHTML = '';
+            shuffle([...options]).forEach(v => {
+                let b = document.createElement('button');
+                b.textContent = v;
+                b.onclick = () => check(v, b);
+                $('answers').appendChild(b)
+            });
+            say('¿Cuánto es ' + table + ' por ' + factor + '?')
+        }
+        function check(v, b) {
+            if (solved) return;
+            if (v === table * factor) {
+                solved = true; stars++;
+                if (firstTry) correct++; updateStars();
+                b.classList.add('correct'); $('feedback').textContent = '¡Muy bien! ' + table + ' × ' + factor + ' = ' + v + '. ¡Ganaste una estrella!';
+                $('nextQuestion').classList.remove('hidden'); $('hint').disabled = true; say('¡Muy bien! ' + table + ' por ' + factor + ' es ' + v)
+            }
+            else {
+                solved = true;
+                firstTry = false;
+                mistakes++;
+                $('mistakes').textContent = '❌ ' + mistakes + ' incorrectas';
+                b.classList.add('wrong');
+                document.querySelectorAll('#answers button').forEach(answerButton => {
+                    answerButton.disabled = true;
+                    if (+answerButton.textContent === table * factor) {
+                        answerButton.classList.add('correct');
+                    }
+                });
+                $('feedback').textContent = 'La respuesta correcta es ' + table + ' × ' + factor + ' = ' + table * factor + '. Puedes pasar a la siguiente pregunta.';
+                $('nextQuestion').classList.remove('hidden');
+                $('hint').disabled = true;
+                say('La respuesta correcta es ' + table * factor + '. Vamos a la siguiente pregunta.')
+            }
+        }
+        function hint() { firstTry = false; $('hintArea').classList.remove('hidden'); $('hintText').textContent = 'Cuenta ' + table + ' grupos de ' + factor + '. Suma ' + factor + ' cada vez.'; drawGroups('hintGroups', table, factor) }
+        $('nextQuestion').onclick = () => {
+            if (!solved) return;
+
+            index++;
+//Practicaste ${deck.length} multiplicaciones
+//de la tabla del ${table}.<br>
+            if (index >= deck.length) {
+                $('bar').style.width = '100%';
+                $('round').classList.add('hidden');
+                $('finish').classList.remove('hidden');                                                
+                $('finish').innerHTML = `
+            <div class="big">🌟</div>
+            <h2>¡Terminaste tu aventura!</h2>
+            <p>                
+                Respuestas correctas: ${correct}.
+                <br>Respuestas incorrectas: ${mistakes}.
+            </p>
+            <p>¡Cada intento te ayuda a aprender!</p>
+            <button class="primary" id="again">
+                Volver a practicar
+            </button>
+        `;
+                
+                $('again').onclick = () => {
+                    stars = 0;
+                    updateStars();
+                    start();
+                    };
+                say('¡Felicitaciones! Terminaste tu aventura.');
+            } else {
+                question();
+            }
+        };
+        for (let n = 1; n <= 12; n++) {
+            let b = document.createElement('button');
+            b.textContent = n;
+            b.dataset.n = n;
+            b.setAttribute('aria-label', 'Tabla del ' + n);
+            b.onclick = () => {
+                if (table !== n) {
+                    stars = 0;
+                    updateStars();
+                    mistakes = 0;
+                    $('mistakes').textContent = '❌ 0 incorrectas';
+                }
+                table = n;
+                render();
+                if (mode === 'play') start()
+            };
+            $('tables').appendChild(b)
+        }
+
+        for (let n = 1; n <= 12; n++) {
+            $('factor').add(new Option('× ' + n, n))
+        }
+
+        $('factor').value = factor;
+        $('factor').onchange = () => {
+            factor = +$('factor').value;
+            render()
+        }; $('nextFactor').onclick = () => {
+            factor = factor % 12 + 1;
+            $('factor').value = factor;
+            render();
+            say(table + ' por ' + factor + ' es ' + table * factor)
+        };
+        $('learnTab').onclick = () => {
+            stars = 0;
+                    updateStars();
+                    start();
+            switchMode('learn');
+            $('factor').value = factor;
+            render()
+        };
+        $('playTab').onclick = () => switchMode('play');
+        $('hint').onclick = hint;
+        $('read').onclick = () => speak(table + ' grupos de ' + factor + '. ' + table + ' por ' + factor + ' es ' + table * factor);
+        $('voice').onclick = () => {
+            voice = !voice; $('voice').textContent = 'Voz: ' + (voice ? 'encendida' : 'apagada');
+            $('voice').setAttribute('aria-pressed', voice);
+            if (!voice && 'speechSynthesis' in window) speechSynthesis.cancel()
+        };
+        if (!('speechSynthesis' in window)) {
+            $('voice').classList.add('hidden');
+            $('read').classList.add('hidden')
+        } render();
+        updateStars();
     </script>
 </body>
 
