@@ -78,10 +78,10 @@
         .scores {
             display: flex;
             flex-wrap: wrap;
-            margin-left: auto;
-            justify-content: flex-end;
+            margin-right: auto;
+            justify-content: flex-start;
             align-items: center;
-            gap: 10px
+            gap: 10px;
         }
 
         .mistakes {
@@ -372,7 +372,7 @@
 
 <body>
     <header>
-        <div class="logo"><span>×</span>Multiplica con Amy</div>        
+        <div class="logo"><span>×</span>Multiplica con Amy</div>
     </header>
     <main>
         <!--<div class="eyebrow">UN POQUITO CADA DÍA</div>-->
@@ -385,7 +385,7 @@
         <div class="tabs">
             <button id="learnTab" class="active">🌱 Aprender</button>
             <button id="playTab">🎯 Practicar</button>
-            <button id="voice" class="muted" aria-pressed="false">Voz: apagada</button>            
+            <button id="voice" class="muted" aria-pressed="false">Voz: apagada</button>
         </div>
         <div class="layout">
             <aside class="card">
@@ -457,38 +457,31 @@
             11: 'Multiplica por 10 y suma una vez más el número.',
             12: 'Multiplica por 10 y suma el doble del número.'
         };
-        function speak(text) 
-        {
-            if ('speechSynthesis' in window) 
-            {
+        function speak(text) {
+            if ('speechSynthesis' in window) {
                 speechSynthesis.cancel();
-                const u = new SpeechSynthesisUtterance(text); 
-                u.lang = 'es-PE'; 
-                u.rate = .85; 
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = 'es-PE';
+                u.rate = .85;
                 speechSynthesis.speak(u)
             }
         }
-        function say(t) 
-        { 
-            if (voice) speak(t) 
+        function say(t) {
+            if (voice) speak(t)
         }
-        function updateStars()
-        { 
-            $('stars').textContent = '⭐ ' + stars + ' estrellas'; 
-            try 
-            { 
-                localStorage.setItem('amy-stars', String(stars)) 
-            } 
-            catch (e) { } 
-        }             
-        function drawGroups(id, a, b) 
-        {
-            $(id).innerHTML = Array.from({ length: a }, (_, i) => '<div class="group"><small>GRUPO ' + (i + 1) + '</small><div class="dots">' + ('<span class="dot"></span>'.repeat(b)) + '</div></div>').join(''); 
-            $(id).setAttribute('aria-label', a + ' grupos con ' + b + ' puntos cada uno') 
+        function updateStars() {
+            $('stars').textContent = '⭐ ' + stars + ' estrellas';
+            try {
+                localStorage.setItem('amy-stars', String(stars))
+            }
+            catch (e) { }
         }
-        function render() 
-        {
-            $('factor').value = factor; 
+        function drawGroups(id, a, b) {
+            $(id).innerHTML = Array.from({ length: a }, (_, i) => '<div class="group"><small>GRUPO ' + (i + 1) + '</small><div class="dots">' + ('<span class="dot"></span>'.repeat(b)) + '</div></div>').join('');
+            $(id).setAttribute('aria-label', a + ' grupos con ' + b + ' puntos cada uno')
+        }
+        function render() {
+            $('factor').value = factor;
             document.querySelectorAll('#tables button').forEach(b => {
                 b.classList.toggle('active', +b.dataset.n === table);
                 b.setAttribute('aria-pressed', +b.dataset.n === table)
@@ -498,8 +491,7 @@
             $('explain').textContent = table + ' grupos con ' + factor + ' puntos en cada grupo.';
             drawGroups('groups', table, factor); $('sum').textContent = Array(table).fill(factor).join(' + ') + ' = ' + table * factor;
         }
-        function switchMode(m)
-        {
+        function switchMode(m) {
             mode = m;
             $('learn').classList.toggle('hidden', m !== 'learn');
             $('play').classList.toggle('hidden', m !== 'play');
@@ -515,8 +507,8 @@
             deck = shuffle(Array.from({ length: 12 }, (_, i) => i + 1));
             index = 0;
             mistakes = 0;
-            correct = 0;             
-            $('mistakes').textContent = '❌ 0 incorrectas';                                       
+            correct = 0;
+            $('mistakes').textContent = '❌ 0 incorrectas';
             $('round').classList.remove('hidden');
             $('finish').classList.add('hidden');
             question()
@@ -527,12 +519,11 @@
             factor = deck[index];
             $('counter').textContent = 'Tabla del ' + table + ' · Pregunta ' + (index + 1) + ' de 12';
             $('bar').style.width = (index / 12 * 100) + '%';
-            
+
             $('question').textContent = table + ' × ' + factor + ' = ?'; $('feedback').textContent = '';
             $('hintArea').classList.add('hidden'); $('nextQuestion').classList.add('hidden'); $('hint').disabled = false;
             let answer = table * factor, options = new Set([answer]);
-            while (options.size < 4) 
-            {
+            while (options.size < 4) {
                 let v = answer + (Math.floor(Math.random() * 9) - 4) * table;
                 if (v > 0 && v !== answer) options.add(v)
             }
@@ -576,12 +567,12 @@
             if (!solved) return;
 
             index++;
-//Practicaste ${deck.length} multiplicaciones
-//de la tabla del ${table}.<br>
+            //Practicaste ${deck.length} multiplicaciones
+            //de la tabla del ${table}.<br>
             if (index >= deck.length) {
                 $('bar').style.width = '100%';
                 $('round').classList.add('hidden');
-                $('finish').classList.remove('hidden');                                                
+                $('finish').classList.remove('hidden');
                 $('finish').innerHTML = `
             <div class="big">🌟</div>
             <h2>¡Terminaste tu aventura!</h2>
@@ -594,12 +585,12 @@
                 Volver a practicar
             </button>
         `;
-                
+
                 $('again').onclick = () => {
                     stars = 0;
                     updateStars();
                     start();
-                    };
+                };
                 say('¡Felicitaciones! Terminaste tu aventura.');
             } else {
                 question();
@@ -640,8 +631,8 @@
         };
         $('learnTab').onclick = () => {
             stars = 0;
-                    updateStars();
-                    start();
+            updateStars();
+            start();
             switchMode('learn');
             $('factor').value = factor;
             render()
