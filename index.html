@@ -458,35 +458,29 @@
             12: 'Multiplica por 10 y suma el doble del número.'
         };
         const Premio = {
-            1: 'S/. 0.50 centavos.',
+            1: 'S/. 0.50 céntimos.',
             2: 'S/. 1.00 Sol',
-            3: 'S/. 5.00 Soles',            
+            3: 'S/. 5.00 Soles',
         };
 
-        function OcultarPremio()
-        {
-            const premio = document.getElementById("premio");  
+        function OcultarPremio() {
+            const premio = document.getElementById("premio");
             premio.classList.add("hidden");
         }
-        function MostrarPremio(correct,table)
-        {
+        function MostrarPremio(correct, table) {
             const premio = document.getElementById("premio");
 
-            if ((correct>2 && correct<=8) && table<=5)
-            {
+            if ((table >= 1 && table <= 5) && (correct > 8 && correct <= 12)) {
                 $('premio').textContent = '🏆 ¡Felicitaciones, Amy! Ganaste: ' + Premio[1];
             }
-            else if ((correct>8 && correct<=11) && table>5)
-            {
+            else if ((table >= 6 && table <= 12) && (correct > 8 && correct <= 11)) {
                 $('premio').textContent = '🏆 ¡Felicitaciones, Amy! Ganaste: ' + Premio[2];
             }
-            else if (correct==12 && table>5)
-            {
+            else if ((table >= 6 && table <= 12) && correct == 12) {
                 $('premio').textContent = '🏆 ¡Felicitaciones, Amy! Ganaste: ' + Premio[3];
             }
-            else
-            {
-                $('premio').textContent = '🏆 Sigue intentando 🏆' ;
+            else {
+                $('premio').textContent = '🏆 Sigue intentando 🏆';
             }
 
             premio.classList.remove("hidden");
@@ -538,7 +532,9 @@
         function shuffle(a) {
             for (let i = a.length - 1; i > 0; i--) { let j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]] } return a
         }
-        function start() {
+        function start() 
+        {
+            OcultarPremio();
             deck = shuffle(Array.from({ length: 12 }, (_, i) => i + 1));
             index = 0;
             mistakes = 0;
@@ -597,16 +593,14 @@
                 say('La respuesta correcta es ' + table * factor + '. Vamos a la siguiente pregunta.')
             }
         }
-        function hint() 
-        { 
-            firstTry = false; 
-            $('hintArea').classList.remove('hidden'); 
-            $('hintText').textContent = 'Cuenta ' + table + ' grupos de ' + factor + '. Suma ' + factor + ' cada vez.'; 
-            drawGroups('hintGroups', table, factor) 
+        function hint() {
+            firstTry = false;
+            $('hintArea').classList.remove('hidden');
+            $('hintText').textContent = 'Cuenta ' + table + ' grupos de ' + factor + '. Suma ' + factor + ' cada vez.';
+            drawGroups('hintGroups', table, factor)
         }
 
-        $('nextQuestion').onclick = () => 
-        {
+        $('nextQuestion').onclick = () => {
             if (!solved) return;
 
             index++;
@@ -629,25 +623,22 @@
             </button>
         `;
 
-            MostrarPremio(correct,table)
+                MostrarPremio(correct, table)
 
-                $('again').onclick = () => 
-                {                    
+                $('again').onclick = () => {
                     stars = 0;
                     updateStars();
                     start();
                     OcultarPremio();
                 };
                 say('¡Felicitaciones! Terminaste tu aventura.');
-            } 
-            else 
-            {                
+            }
+            else {
                 question();
             }
         };
 
-        for (let n = 1; n <= 12; n++) 
-        {
+        for (let n = 1; n <= 12; n++) {
             let b = document.createElement('button');
             b.textContent = n;
             b.dataset.n = n;
