@@ -423,7 +423,7 @@
                         </div>
                     </div>
                     <div id="finish" class="finish hidden"></div>
-                    <div class="hintbox" id="premio"></div>
+                    <div class="hintbox hidden" id="premio"></div>
                 </div>
             </section>
         </div>
@@ -457,6 +457,41 @@
             11: 'Multiplica por 10 y suma una vez más el número.',
             12: 'Multiplica por 10 y suma el doble del número.'
         };
+        const Premio = {
+            1: 'S/. 0.50 centavos.',
+            2: 'S/. 1.00 Sol',
+            3: 'S/. 5.00 Soles',            
+        };
+
+        function OcultarPremio()
+        {
+            const premio = document.getElementById("premio");  
+            premio.classList.add("hidden");
+        }
+        function MostrarPremio(correct,table)
+        {
+            const premio = document.getElementById("premio");
+
+            if ((correct>2 && correct<=5) && table<=5)
+            {
+                $('premio').textContent = '🏆 ¡Felicitaciones, Amy! Ganaste: ' + Premio[1];
+            }
+            else if (correct<=9 && table>5)
+            {
+                $('premio').textContent = '🏆 ¡Felicitaciones, Amy! Ganaste: ' + Premio[2];
+            }
+            else if (correct==12 && table>5)
+            {
+                $('premio').textContent = '🏆 ¡Felicitaciones, Amy! Ganaste: ' + Premio[3];
+            }
+            else
+            {
+                $('premio').textContent = '🏆 Sigue intentando 🏆' ;
+            }
+
+            premio.classList.remove("hidden");
+        }
+
         function speak(text) {
             if ('speechSynthesis' in window) {
                 speechSynthesis.cancel();
@@ -562,8 +597,16 @@
                 say('La respuesta correcta es ' + table * factor + '. Vamos a la siguiente pregunta.')
             }
         }
-        function hint() { firstTry = false; $('hintArea').classList.remove('hidden'); $('hintText').textContent = 'Cuenta ' + table + ' grupos de ' + factor + '. Suma ' + factor + ' cada vez.'; drawGroups('hintGroups', table, factor) }
-        $('nextQuestion').onclick = () => {
+        function hint() 
+        { 
+            firstTry = false; 
+            $('hintArea').classList.remove('hidden'); 
+            $('hintText').textContent = 'Cuenta ' + table + ' grupos de ' + factor + '. Suma ' + factor + ' cada vez.'; 
+            drawGroups('hintGroups', table, factor) 
+        }
+
+        $('nextQuestion').onclick = () => 
+        {
             if (!solved) return;
 
             index++;
@@ -586,17 +629,25 @@
             </button>
         `;
 
-                $('again').onclick = () => {
+            MostrarPremio(correct,table)
+
+                $('again').onclick = () => 
+                {                    
                     stars = 0;
                     updateStars();
                     start();
+                    OcultarPremio();
                 };
                 say('¡Felicitaciones! Terminaste tu aventura.');
-            } else {
+            } 
+            else 
+            {                
                 question();
             }
         };
-        for (let n = 1; n <= 12; n++) {
+
+        for (let n = 1; n <= 12; n++) 
+        {
             let b = document.createElement('button');
             b.textContent = n;
             b.dataset.n = n;
