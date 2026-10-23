@@ -470,13 +470,16 @@
         function MostrarPremio(correct, table) {
             const premio = document.getElementById("premio");
 
-            if ((table >= 1 && table <= 5) && (correct > 8 && correct <= 12)) {
+            if ((table >= 1 && table <= 5) && (correct > 10 && correct <= 12)) 
+            {
                 $('premio').textContent = '🏆 ¡Felicitaciones, Amy! Ganaste: ' + Premio[1];
             }
-            else if ((table >= 6 && table <= 12) && (correct > 8 && correct <= 11)) {
+            else if ((table==6 || table==7 || table==10) && (correct > 8 && correct <= 11)) 
+            {
                 $('premio').textContent = '🏆 ¡Felicitaciones, Amy! Ganaste: ' + Premio[2];
             }
-            else if ((table >= 6 && table <= 12) && correct == 12) {
+            else if ((table==8 || table==9 || table== 11 || table == 12) && correct == 12) 
+            {
                 $('premio').textContent = '🏆 ¡Felicitaciones, Amy! Ganaste: ' + Premio[3];
             }
             else {
