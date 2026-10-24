@@ -5,434 +5,67 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Multiplica con Amy</title>
-    <style>
-        * {
-            box-sizing: border-box
-        }
-
-        body {
-            margin: 0;
-            background: #f8f6ef;
-            color: #273647;
-            font: 17px system-ui, sans-serif
-        }
-
-        button,
-        select,
-        input {
-            font: inherit
-        }
-
-        button {
-            cursor: pointer;
-            border: 0;
-            border-radius: 16px;
-            padding: 14px 23px;
-            background: #e9edf0;
-            color: #273647;
-            font-weight: 750
-        }
-
-        button:hover {
-            filter: brightness(.96);
-            transform: translateY(-1px)
-        }
-
-        button:focus-visible,
-        select:focus-visible,
-        input:focus-visible {
-            outline: 3px solid #e29029;
-            outline-offset: 3px
-        }
-
-        header {
-            max-width: 1120px;
-            margin: auto;
-            padding: 28px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px
-        }
-
-        .logo {
-            font-size: 22px;
-            font-weight: 850
-        }
-
-        .logo span {
-            background: #7658c8;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 14px;
-            margin-right: 10px
-        }
-
-        .stars {
-            background: #fff0c3;
-            padding: 10px 17px;
-            border-radius: 25px;
-            font-weight: 800
-        }
-
-        .scores {
-            display: flex;
-            flex-wrap: wrap;
-            margin-right: auto;
-            justify-content: flex-start;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .mistakes {
-            background: #ffe5df
-        }
-
-        main {
-            max-width: 1120px;
-            margin: auto;
-            padding: 15px 24px 40px
-        }
-
-        .eyebrow {
-            color: #6f55aa;
-            font-size: 13px;
-            font-weight: 800;
-            letter-spacing: 2px
-        }
-
-        h1 {
-            font-size: clamp(30px, 5vw, 46px);
-            margin: 10px 0
-        }
-
-        p {
-            line-height: 1.6;
-            color: #627081
-        }
-
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin: 25px 0
-        }
-
-        .active,
-        .primary {
-            background: #7658c8;
-            color: white
-        }
-
-        .layout {
-            display: grid;
-            grid-template-columns: 260px 1fr;
-            gap: 24px
-        }
-
-        .card {
-            background: white;
-            border: 1px solid #e7e6df;
-            border-radius: 25px;
-            padding: 26px;
-            box-shadow: 0 6px 0 #efede6
-        }
-
-        h2 {
-            font-size: 20px;
-            margin: 0 0 18px
-        }
-
-        .tables {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px
-        }
-
-        .tables button {
-            font-size: 25px;
-            padding: 18px
-        }
-
-        .small {
-            font-size: 13px;
-            line-height: 1.5
-        }
-
-        .label {
-            display: block;
-            font-size: 14px;
-            font-weight: 700;
-            margin: 24px 0 10px
-        }
-
-        select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #dedee5;
-            border-radius: 12px;
-            background: white
-        }
-
-        .hintbox {
-            background: #f4effe;
-            padding: 16px;
-            border-radius: 16px;
-            margin-top: 22px;
-            color: #614b8e;
-            line-height: 1.5;
-            font-size: 14px
-        }
-
-        .equation {
-            text-align: center;
-            font-size: 43px;
-            font-weight: 850;
-            margin: 8px 0;
-            color: #5b4398
-        }
-
-        .sub {
-            text-align: center;
-            margin: 5px 0 22px
-        }
-
-        .groups {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px
-        }
-
-        .group {
-            border: 1px solid #d6eae2;
-            background: #f0f9f5;
-            border-radius: 15px;
-            padding: 10px;
-            min-height: 87px
-        }
-
-        .group small {
-            display: block;
-            color: #5b8174;
-            font-size: 11px;
-            font-weight: 700;
-            margin-bottom: 6px
-        }
-
-        .dots {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px
-        }
-
-        .dot {
-            width: 16px;
-            height: 16px;
-            background: #4ba987;
-            border-radius: 50%;
-            display: inline-block
-        }
-
-        .sum {
-            text-align: center;
-            font-size: 15px;
-            margin: 22px 0;
-            color: #427a65
-        }
-
-        .actions {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 20px
-        }
-
-        .answers {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            max-width: 440px;
-            margin: 22px auto
-        }
-
-        .answers button {
-            background: #f1edf9;
-            border: 2px solid #e4dcf2;
-            font-size: 27px
-        }
-
-        .answers button.correct {
-            background: #d8f4e4;
-            border-color: #49a67c
-        }
-
-        .answers button.wrong {
-            background: #fff1d8;
-            border-color: #e3b861
-        }
-
-        .feedback {
-            min-height: 52px;
-            text-align: center;
-            font-weight: 700;
-            color: #427a65;
-            line-height: 1.6
-        }
-
-        .progress {
-            height: 9px;
-            background: #eee9f5;
-            border-radius: 10px;
-            margin: 14px 0 25px;
-            overflow: hidden
-        }
-
-        .progress div {
-            height: 100%;
-            background: #9c81dd;
-            transition: width .3s
-        }
-
-        .hidden {
-            display: none !important
-        }
-
-        .muted {
-            background: transparent;
-            border: 1px solid #dcd7e7;
-            font-size: 14px
-        }
-
-        .badge {
-            display: inline-block;
-            background: #e9f5ef;
-            color: #39795e;
-            padding: 7px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 700
-        }
-
-        .finish {
-            text-align: center;
-            padding: 30px 0
-        }
-
-        .finish .big {
-            font-size: 70px
-        }
-
-        footer {
-            text-align: center;
-            font-size: 13px;
-            color: #7a8490;
-            margin-top: 30px
-        }
-
-        @media(max-width:760px) {
-            .layout {
-                grid-template-columns: 1fr
-            }
-
-            .tables {
-                grid-template-columns: repeat(4, 1fr)
-            }
-
-            .card {
-                padding: 20px
-            }
-
-            header {
-                padding: 20px;
-                flex-wrap: wrap
-            }
-
-            .groups {
-                grid-template-columns: repeat(2, 1fr)
-            }
-
-            main {
-                padding: 8px 16px
-            }
-
-            .logo {
-                font-size: 17px
-            }
-
-            .stars {
-                font-size: 14px
-            }
-
-            .equation {
-                font-size: 36px
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="theme.css">
 </head>
 
-<body>
+<body class="home">
     <header>
-        <div class="logo"><span>×</span>Multiplica con Amy</div>
+        <button class="logo" id="homeButton" aria-label="Volver al inicio">Multiplica<small>con <em>Amy</em></small></button>
+        <nav class="tabs hidden" id="modeTabs" aria-label="Modo de juego">
+            <button id="learnTab" class="active">Aprender</button>
+            <button id="playTab">Practicar</button>
+        </nav>
+        <div class="utility"><button id="voice" aria-pressed="false">Voz: apagada</button></div>
     </header>
-    <main>
-        <!--<div class="eyebrow">UN POQUITO CADA DÍA</div>-->
-        <h1>¡Multiplicar es descubrir!</h1>
-        <!--<p>Cuenta los grupos, encuentra el patrón y prueba lo que aprendiste.</p>-->
-        <div class="scores">
-            <div class="stars" id="stars">⭐ 0 estrellas</div>
-            <div class="stars mistakes" id="mistakes" aria-live="polite">❌ 0 incorrectas</div>
+    <section class="welcome" id="welcome">
+        <div class="welcome-panel">
+            <h1>¡Hola, Amy!</h1><p>¿Qué hacemos hoy?</p>
+            <div class="mode-cards">
+                <button class="mode-card" id="chooseLearn"><span class="mode-icon" aria-hidden="true">📖</span><strong>Aprender</strong><small>Mira, cuenta y escucha</small></button>
+                <button class="mode-card yellow" id="choosePlay"><span class="mode-icon" aria-hidden="true">🎯</span><strong>Practicar</strong><small>Responde y gana premios</small></button>
+            </div>
         </div>
-        <div class="tabs">
-            <button id="learnTab" class="active">🌱 Aprender</button>
-            <button id="playTab">🎯 Practicar</button>
-            <button id="voice" class="muted" aria-pressed="false">Voz: apagada</button>
-        </div>
+    </section>
+    <main id="game" class="hidden">
         <div class="layout">
-            <aside class="card">
-                <h2>Elige tu tabla</h2>
+            <aside class="card sidebar">
+                <h2 id="tableTitle">Elige tu tabla</h2>
                 <div class="tables" id="tables"></div>
-                <label class="label" for="factor">¿Por cuánto
-                    multiplicamos?</label>
-                <select id="factor"></select>
-                <!--<div class="hintbox" id="tip"></div>-->
-                <p class="small">Ing. John Jesus Epiquin Castillo.</p>
+                <div class="factor-controls" id="factorControls">
+                    <label class="label" for="factor">Multiplicar por:</label>
+                    <div class="stepper"><button id="prevFactor" aria-label="Multiplicador anterior">‹</button><select id="factor"></select><button id="advanceFactor" aria-label="Multiplicador siguiente">›</button></div>
+                </div>
             </aside>
-            <section class="card">
-                <div id="learn"><span class="badge">Mira y cuenta</span>
+            <section class="card game-card">
+                <div id="learn">
                     <div class="equation" id="equation"></div>
                     <p class="sub" id="explain"></p>
                     <div class="groups" id="groups"></div>
                     <div class="sum" id="sum"></div>
-                    <div class="actions"><button class="muted" id="read">🔊 Escuchar</button><button class="primary"
-                            id="nextFactor">Siguiente ejemplo →</button></div>
+                    <div class="actions"><button id="read">🔊 Escuchar</button><button id="nextFactor">Siguiente ejemplo ❯</button></div>
                 </div>
                 <div id="play" class="hidden">
-                    <div id="round"><span class="badge" id="counter"></span>
-                        <div class="progress">
-                            <div id="bar"></div>
-                        </div>
+                    <div class="scores"><div class="stars" id="stars" aria-live="polite">⭐ 0 estrellas</div><div class="stars mistakes" id="mistakes" aria-live="polite">❌ 0 incorrectas</div></div>
+                    <div id="round">
+                        <div class="round-status"><span id="counter"></span><div class="progress"><div id="bar"></div></div></div>
                         <div class="equation" id="question"></div>
-                        <p class="sub">Toca la respuesta que creas correcta.</p>
-                        <div class="answers" id="answers"></div>
+                        <div class="answers" id="answers" aria-label="Elige la respuesta correcta"></div>
                         <div class="feedback" id="feedback" aria-live="polite"></div>
-                        <div class="actions"><button class="muted" id="hint">💡 Dame una pista</button><button
-                                class="primary hidden" id="nextQuestion">Siguiente →</button></div>
-                        <div id="hintArea" class="hidden">
-                            <p class="sub" id="hintText"></p>
-                            <div class="groups" id="hintGroups"></div>
-                        </div>
+                        <div class="actions"><button id="hint">💡 Dame una pista</button><button class="hidden" id="nextQuestion">Siguiente ❯</button></div>
+                        <div id="hintArea" class="hidden"><p class="sub" id="hintText"></p><div class="groups" id="hintGroups"></div></div>
                     </div>
                     <div id="finish" class="finish hidden"></div>
                     <div class="hintbox hidden" id="premio"></div>
                 </div>
             </section>
+            <aside class="companion" aria-label="Amy te anima"><div class="speech" id="encouragement">¡Así se multiplica!</div></aside>
         </div>
-        <!--<footer>Ing. John Jesus Epiquin Castillo.</footer>-->
+        <footer>Ing. John Jesus Epiquin Castillo.</footer>
     </main>
     <script>
         const $ = id => document.getElementById(id);
-        let table = 1,
-            factor = 1,
+        let table = 6,
+            factor = 4,
             mode = 'learn',
             voice = false,
             stars = 0,
@@ -509,10 +142,11 @@
             catch (e) { }
         }
         function drawGroups(id, a, b) {
-            $(id).innerHTML = Array.from({ length: a }, (_, i) => '<div class="group"><small>GRUPO ' + (i + 1) + '</small><div class="dots">' + ('<span class="dot"></span>'.repeat(b)) + '</div></div>').join('');
-            $(id).setAttribute('aria-label', a + ' grupos con ' + b + ' puntos cada uno')
+            $(id).innerHTML = Array.from({ length: a }, (_, i) => '<div class="group"><div class="dots">' + ('<span class="dot" aria-hidden="true">⭐</span>'.repeat(b)) + '</div></div>').join('');
+            $(id).setAttribute('aria-label', a + ' grupos con ' + b + ' estrellas cada uno')
         }
         function render() {
+            $('tableTitle').textContent = mode === 'play' ? 'Tabla del ' + table : 'Elige tu tabla';
             $('factor').value = factor;
             document.querySelectorAll('#tables button').forEach(b => {
                 b.classList.toggle('active', +b.dataset.n === table);
@@ -520,11 +154,20 @@
             });
             //$('tip').textContent = '💡 Truco del ' + table + ': ' + tips[table];            
             $('equation').textContent = table + ' × ' + factor + ' = ' + table * factor;
-            $('explain').textContent = table + ' grupos con ' + factor + ' puntos en cada grupo.';
+            $('explain').textContent = table + ' grupos de ' + factor + ' estrellas';
             drawGroups('groups', table, factor); $('sum').textContent = Array(table).fill(factor).join(' + ') + ' = ' + table * factor;
         }
         function switchMode(m) {
             mode = m;
+            document.body.classList.remove('home');
+            $('welcome').classList.add('hidden');
+            $('game').classList.remove('hidden');
+            $('modeTabs').classList.remove('hidden');
+            $('factorControls').classList.toggle('hidden', m === 'play');
+            $('encouragement').textContent = m === 'play' ? '¡Tú puedes!' : '¡Así se multiplica!';
+            $('learnTab').setAttribute('aria-pressed', m === 'learn');
+            $('playTab').setAttribute('aria-pressed', m === 'play');
+            render();
             $('learn').classList.toggle('hidden', m !== 'learn');
             $('play').classList.toggle('hidden', m !== 'play');
             $('learnTab').classList.toggle('active', m === 'learn');
@@ -551,7 +194,7 @@
             solved = false;
             firstTry = true;
             factor = deck[index];
-            $('counter').textContent = 'Tabla del ' + table + ' · Pregunta ' + (index + 1) + ' de 12';
+            $('counter').textContent = 'Pregunta ' + (index + 1) + ' de 12';
             $('bar').style.width = (index / 12 * 100) + '%';
 
             $('question').textContent = table + ' × ' + factor + ' = ?'; $('feedback').textContent = '';
@@ -661,7 +304,7 @@
         }
 
         for (let n = 1; n <= 12; n++) {
-            $('factor').add(new Option('× ' + n, n))
+            $('factor').add(new Option(n, n))
         }
 
         $('factor').value = factor;
@@ -674,14 +317,18 @@
             render();
             say(table + ' por ' + factor + ' es ' + table * factor)
         };
-        $('learnTab').onclick = () => {
-            stars = 0;
-            updateStars();
-            start();
-            switchMode('learn');
-            $('factor').value = factor;
-            render()
+        $('learnTab').onclick = () => switchMode('learn');
+        $('chooseLearn').onclick = () => switchMode('learn');
+        $('choosePlay').onclick = () => switchMode('play');
+        $('homeButton').onclick = () => {
+            $('game').classList.add('hidden');
+            $('modeTabs').classList.add('hidden');
+            $('welcome').classList.remove('hidden');
+            document.body.classList.add('home');
+            if ('speechSynthesis' in window) speechSynthesis.cancel();
         };
+        $('prevFactor').onclick = () => { factor = (factor + 10) % 12 + 1; render(); };
+        $('advanceFactor').onclick = () => $('nextFactor').click();
         $('playTab').onclick = () => switchMode('play');
         $('hint').onclick = hint;
         $('read').onclick = () => speak(table + ' grupos de ' + factor + '. ' + table + ' por ' + factor + ' es ' + table * factor);
